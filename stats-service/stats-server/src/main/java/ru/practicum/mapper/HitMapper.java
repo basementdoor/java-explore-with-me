@@ -1,8 +1,8 @@
-package ru.practicum.explore.mapper;
+package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.explore.dto.HitDto;
-import ru.practicum.explore.model.Hit;
+import ru.practicum.dto.HitDto;
+import ru.practicum.model.Hit;
 
 import java.time.LocalDateTime;
 

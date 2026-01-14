@@ -1,4 +1,4 @@
-package ru.practicum.explore;
+package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

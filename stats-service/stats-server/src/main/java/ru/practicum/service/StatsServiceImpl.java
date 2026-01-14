@@ -1,13 +1,13 @@
-package ru.practicum.explore.service;
+package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explore.dto.HitDto;
-import ru.practicum.explore.dto.StatsDto;
-import ru.practicum.explore.mapper.HitMapper;
-import ru.practicum.explore.model.Hit;
-import ru.practicum.explore.repository.StatsRepository;
+import ru.practicum.dto.HitDto;
+import ru.practicum.dto.StatsDto;
+import ru.practicum.mapper.HitMapper;
+import ru.practicum.model.Hit;
+import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

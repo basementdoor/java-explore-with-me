@@ -1,13 +1,13 @@
-package ru.practicum.explore;
+package ru.practicum;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explore.dto.HitDto;
-import ru.practicum.explore.dto.StatsDto;
-import ru.practicum.explore.service.StatsService;
+import ru.practicum.dto.HitDto;
+import ru.practicum.dto.StatsDto;
+import ru.practicum.service.StatsService;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package ru.practicum.explore;
+package ru.practicum;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.practicum.explore.dto.HitDto;
-import ru.practicum.explore.dto.StatsDto;
+import ru.practicum.dto.HitDto;
+import ru.practicum.dto.StatsDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
