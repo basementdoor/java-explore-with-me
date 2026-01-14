@@ -4,8 +4,6 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.dto.HitDto;
 import ru.practicum.model.Hit;
 
-import java.time.LocalDateTime;
-
 @UtilityClass
 public class HitMapper {
 
