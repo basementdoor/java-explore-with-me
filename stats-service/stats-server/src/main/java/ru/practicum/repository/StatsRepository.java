@@ -11,25 +11,41 @@ import java.util.List;
 
 public interface StatsRepository extends JpaRepository<Hit, Long> {
 
-    @Query("select h.app as app, h.uri as uri, count(h.id) as hits " +
-            "from Hit h " +
-            "where h.timestamp between :start and :end " +
-            "and (:urisEmpty = true or h.uri in :uris) " +
-            "group by h.app, h.uri " +
-            "order by hits desc")
-    List<StatsDto> findStats(@Param("start") LocalDateTime start,
-                             @Param("end") LocalDateTime end,
-                             @Param("uris") List<String> uris,
-                             @Param("urisEmpty") boolean urisEmpty);
+    @Query("""
+        select new ru.practicum.dto.StatsDto(
+            h.app,
+            h.uri,
+            count(h.id)
+        )
+        from Hit h
+        where h.timestamp between :start and :end
+        and (:urisEmpty = true or h.uri in :uris)
+        group by h.app, h.uri
+        order by count(h.id) desc
+        """)
+    List<StatsDto> findStats(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("uris") List<String> uris,
+            @Param("urisEmpty") boolean urisEmpty
+    );
 
-    @Query("select h.app as app, h.uri as uri, count(distinct h.ip) as hits " +
-            "from Hit h " +
-            "where h.timestamp between :start and :end " +
-            "and (:urisEmpty = true or h.uri in :uris) " +
-            "group by h.app, h.uri " +
-            "order by hits desc")
-    List<StatsDto> findUniqueStats(@Param("start") LocalDateTime start,
-                                              @Param("end") LocalDateTime end,
-                                              @Param("uris") List<String> uris,
-                                              @Param("urisEmpty") boolean urisEmpty);
+    @Query("""
+        select new ru.practicum.dto.StatsDto(
+            h.app,
+            h.uri,
+            count(distinct h.ip)
+        )
+        from Hit h
+        where h.timestamp between :start and :end
+        and (:urisEmpty = true or h.uri in :uris)
+        group by h.app, h.uri
+        order by count(distinct h.ip) desc
+        """)
+    List<StatsDto> findUniqueStats(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("uris") List<String> uris,
+            @Param("urisEmpty") boolean urisEmpty
+    );
 }
