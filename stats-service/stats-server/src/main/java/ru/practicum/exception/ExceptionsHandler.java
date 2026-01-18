@@ -1,0 +1,49 @@
+package ru.practicum.exception;
+
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+@Slf4j
+public class ExceptionsHandler {
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundError(NotFoundException exception) {
+        log.warn("Не найдена сущность для запроса {}", exception.getMessage());
+        return new ErrorResponse("Не найдено", exception.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenError(ForbiddenException exception) {
+        log.error("Попытка запроса на лицом с недостаточными правами {}", exception.getMessage());
+        return new ErrorResponse("Доступ запрещен:", exception.getMessage());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidationError(ValidationException exception) {
+        log.error("Ошибка валидации данных: {}", exception.getMessage());
+        return new ErrorResponse("Ошибка запроса: ", exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleArgumentNotValidError(final MethodArgumentNotValidException e) {
+        return new ErrorResponse("Ошибка запроса: ", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleConstraintViolationError(final ConstraintViolationException e) {
+        return new ErrorResponse("Ошибка запроса: ", e.getMessage());
+    }
+
+    public record ErrorResponse(String error, String details) {}
+}
