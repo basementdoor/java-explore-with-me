@@ -1,16 +1,14 @@
 package ru.practicum.category.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "categories")
 @Getter
 @Setter
+@Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
@@ -18,5 +16,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(nullable = false, unique = true)
     String name;
 }
