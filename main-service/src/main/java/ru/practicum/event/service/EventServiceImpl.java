@@ -113,7 +113,9 @@ public class EventServiceImpl implements EventService {
         validateEventDateUpdate(event, updateRequest);
         EventMapper.updateToEvent(event, updateRequest);
 
-        updateCategory(event, updateRequest.getCategory().getId());
+        if (updateRequest.getCategory() != null) {
+            updateCategory(event, updateRequest.getCategory().getId());
+        }
         Event savedEvent = updateAdminEventStateAction(event, updateRequest.getStateAction());
         var views = getEventsViews(List.of(savedEvent)).getOrDefault(savedEvent.getId(), 0L);
         return EventMapper.toEventFullDto(savedEvent, views);
@@ -244,7 +246,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private void validateDatesRange(LocalDateTime rangeStart, LocalDateTime rangeEnd) {
-        if (rangeStart.isAfter(rangeEnd)) {
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("Некорректный диапазон дат: начало не может быть позднее даты окончания");
         }
     }

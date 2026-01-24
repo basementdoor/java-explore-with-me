@@ -31,7 +31,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ParticipationRequestDto> getRequestsByUserId(Long userId) {
         throwIfUserNotExist(userId);
-        return requestRepository.findByRequesterId(userId).stream()
+        return requestRepository.findByRequestorId(userId).stream()
                 .map(RequestMapper::toRequestDto)
                 .toList();
     }
@@ -53,7 +53,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
-        ParticipationRequest request = requestRepository.findByIdAndRequesterId(requestId, userId)
+        ParticipationRequest request = requestRepository.findByIdAndRequestorId(requestId, userId)
                 .orElseThrow(() -> new NotFoundException("Для пользователя с ID: %s не найден запрос с ID: %s"
                         .formatted(userId, requestId)));
         request.setStatus(RequestStatus.CANCELED);
@@ -72,7 +72,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private void validateRequest(Long userId, Event event) {
-        if (requestRepository.existsByRequesterIdAndEventId(userId, event.getId())) {
+        if (requestRepository.existsByRequestorIdAndEventId(userId, event.getId())) {
             throw new ConflictException("Нельзя добавить повторный запрос");
         }
         if (Objects.equals(event.getInitiator().getId(), userId)) {
