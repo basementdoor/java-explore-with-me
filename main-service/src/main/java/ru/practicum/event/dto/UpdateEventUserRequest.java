@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEventUserRequest {
+public class UpdateEventUserRequest implements UpdateEventRequest {
     @Size(min = 20, max = 2000, message = "Аннотация должна содержать от 20 до 2000 символов.")
     String annotation;
 

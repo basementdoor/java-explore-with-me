@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.RequestStatus;
+import ru.practicum.RequestUpdateStatus;
 import ru.practicum.StatsClient;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
@@ -23,7 +25,8 @@ import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
 import ru.practicum.request.dto.ParticipationRequestDto;
-import ru.practicum.request.mapper.ParticipationRequestMapper;
+import ru.practicum.request.mapper.RequestMapper;
+import ru.practicum.request.model.ParticipationRequest;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
@@ -169,17 +172,20 @@ public class EventServiceImpl implements EventService {
         throwIfUserNotExist(userId);
         throwIfEventByUserNotExist(eventId, userId);
         return requestRepository.findByEventId(eventId).stream()
-                .map(ParticipationRequestMapper::toRequestDto)
+                .map(RequestMapper::toRequestDto)
                 .toList();
     }
 
     @Override
     @Transactional
-    public EventRequestStatusUpdateResult updateEventRequestsStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) {
+    public EventRequestStatusUpdateResult updateEventRequestsStatus(Long userId, Long eventId,
+                                                                    EventRequestStatusUpdateRequest updateRequest) {
         throwIfUserNotExist(userId);
-        throwIfEventByUserNotExist(eventId, userId);
+        Event event = throwIfEventByUserNotExist(eventId, userId);
 //        TODO: доделать после реализации request
-        return null;
+        List<ParticipationRequest> requests = requestRepository.findByIdIn(updateRequest.getRequestIds());
+        validateRequests(eventId, requests);
+        return updateRequestsStatus(requests, event, updateRequest.getStatus());
     }
 
     private Event throwIfEventNotExist(Long eventId) {
@@ -241,6 +247,60 @@ public class EventServiceImpl implements EventService {
         if (rangeStart.isAfter(rangeEnd)) {
             throw new ValidationException("Некорректный диапазон дат: начало не может быть позднее даты окончания");
         }
+    }
+
+    private void validateRequests(Long eventId, List<ParticipationRequest> requests) {
+        if (requests.stream().anyMatch(request -> request.getStatus() != RequestStatus.PENDING)) {
+            throw new ConflictException("Все запросы должны быть со статусом PENDING");
+        }
+        if (requests.stream().anyMatch(request -> !Objects.equals(request.getEvent().getId(), eventId))) {
+            throw new ConflictException("Запрос не относится к событию.");
+        }
+    }
+
+    private EventRequestStatusUpdateResult updateRequestsStatus(List<ParticipationRequest> requests, Event event,
+                                                                RequestUpdateStatus status) {
+        switch (status) {
+            case CONFIRMED -> {
+                return confirmRequests(event, requests, status);
+            }
+            case REJECTED -> {
+                setRequestsStatuses(requests, status);
+                return rejectRequests(requests);
+            }
+            default ->  throw new ValidationException("Неизвестный статус: " + status);
+        }
+    }
+
+    private EventRequestStatusUpdateResult confirmRequests(Event event, List<ParticipationRequest> requests,
+                                                           RequestUpdateStatus status) {
+        EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
+
+        if (event.getConfirmedRequests() + requests.size() > event.getParticipantLimit()) {
+            throw new ConflictException("Уже достигнут лимит участников");
+        }
+
+        setRequestsStatuses(requests, status);
+
+        event.setConfirmedRequests(event.getConfirmedRequests() + requests.size());
+        eventRepository.save(event);
+
+        result.getConfirmedRequests().addAll(requests.stream().map(RequestMapper::toRequestDto).toList());
+        return result;
+    }
+
+    private EventRequestStatusUpdateResult rejectRequests(List<ParticipationRequest> requests) {
+        EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
+        result.getRejectedRequests().addAll(requests.stream().map(RequestMapper::toRequestDto).toList());
+        return result;
+    }
+
+    private void setRequestsStatuses(List<ParticipationRequest> requests, RequestUpdateStatus status) {
+        RequestStatus toSetStatus = status == RequestUpdateStatus.REJECTED
+                ? RequestStatus.REJECTED
+                : RequestStatus.CONFIRMED;
+        requests.forEach(r -> r.setStatus(toSetStatus));
+        requestRepository.saveAll(requests);
     }
 
     private void updateCategory(Event event, Long categoryId) {

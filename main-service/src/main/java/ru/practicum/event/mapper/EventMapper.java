@@ -2,10 +2,7 @@ package ru.practicum.event.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.category.mapper.CategoryMapper;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.dto.UpdateEventUserRequest;
+import ru.practicum.event.dto.*;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.Location;
 import ru.practicum.user.mapper.UserMapper;
@@ -62,31 +59,31 @@ public class EventMapper {
                 .build();
     }
 
-    public Event updateToEvent(Event event, UpdateEventUserRequest dto) {
-        if (dto.getAnnotation() != null) {
-            event.setAnnotation(dto.getAnnotation());
+    public Event updateToEvent(Event event, UpdateEventRequest request) {
+        if (request.getAnnotation() != null) {
+            event.setAnnotation(request.getAnnotation());
         }
-        if (dto.getEventDate() != null) {
-            event.setEventDate(dto.getEventDate());
+        if (request.getEventDate() != null) {
+            event.setEventDate(request.getEventDate());
         }
-        if (dto.getDescription() != null) {
-            event.setDescription(dto.getDescription());
+        if (request.getDescription() != null) {
+            event.setDescription(request.getDescription());
         }
-        if (dto.getLocation() != null) {
-            event.setLat(dto.getLocation().getLat());
-            event.setLon(dto.getLocation().getLon());
+        if (request.getLocation() != null) {
+            event.setLat(request.getLocation().getLat());
+            event.setLon(request.getLocation().getLon());
         }
-        if (dto.getParticipantLimit() != null) {
-            event.setParticipantLimit(dto.getParticipantLimit());
+        if (request.getParticipantLimit() != null) {
+            event.setParticipantLimit(request.getParticipantLimit());
         }
-        if (dto.getPaid() != null) {
-            event.setPaid(dto.getPaid());
+        if (request.getPaid() != null) {
+            event.setPaid(request.getPaid());
         }
-        if (dto.getRequestModeration() != null) {
-            event.setRequestModeration(dto.getRequestModeration());
+        if (request.getRequestModeration() != null) {
+            event.setRequestModeration(request.getRequestModeration());
         }
-        if (dto.getTitle() != null) {
-            event.setTitle(dto.getTitle());
+        if (request.getTitle() != null) {
+            event.setTitle(request.getTitle());
         }
         return event;
     }
