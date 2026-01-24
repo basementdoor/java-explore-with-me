@@ -9,15 +9,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.event.EventStateAction;
-import ru.practicum.Location;
+import ru.practicum.event.enums.EventStateAction;
+import ru.practicum.event.model.Location;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEventAdminRequest {
+public class UpdateEventAdminRequest extends UpdateEventUserRequest {
     @Size(min = 20, max = 2000, message = "Аннотация должна содержать от 20 до 2000 символов.")
     String annotation;
 

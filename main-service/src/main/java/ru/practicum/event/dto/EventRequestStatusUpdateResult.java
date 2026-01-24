@@ -1,6 +1,6 @@
 package ru.practicum.event.dto;
 
-import ru.practicum.participation.dto.ParticipationRequestDto;
+import ru.practicum.request.dto.ParticipationRequestDto;
 
 import java.util.Collection;
 

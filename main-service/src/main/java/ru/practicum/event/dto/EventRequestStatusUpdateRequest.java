@@ -1,15 +1,21 @@
 package ru.practicum.event.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.RequestStatus;
+import ru.practicum.RequestUpdateStatus;
 
-import java.util.Collection;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateRequest {
-    Collection<Long> requestIds;
-    RequestStatus status;
+    @NotEmpty
+    private List<Long> requestIds;
+
+    @NotNull
+    private RequestUpdateStatus status;
 }

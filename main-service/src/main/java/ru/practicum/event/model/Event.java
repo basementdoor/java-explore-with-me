@@ -3,12 +3,13 @@ package ru.practicum.event.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
-import ru.practicum.event.EventState;
+import ru.practicum.event.enums.EventState;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "events")
 @Setter
 @Getter
+@Builder
 @ToString
 public class Event {
     @Id
@@ -49,7 +51,7 @@ public class Event {
 
     float lon;
 
-    boolean paid;
+    Boolean paid;
 
     @Column(name = "participant_limit")
     Integer participantLimit = 0;

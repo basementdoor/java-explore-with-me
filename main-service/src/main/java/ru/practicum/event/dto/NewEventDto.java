@@ -1,35 +1,38 @@
 package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Future;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.event.enums.EventStateAction;
 import ru.practicum.event.model.Location;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEventUserRequest {
-    @Size(min = 20, max = 2000, message = "Аннотация должна содержать от 20 до 2000 символов.")
+public class NewEventDto {
+    @NotBlank
+    @Size(min = 20, max = 2000)
     String annotation;
 
-    @PositiveOrZero
+    @NotNull
     Long category;
 
-    @Size(min = 20, max = 7000, message = "Описание должно содержать от 20 до 7000 символов.")
+    @NotBlank
+    @Size(min = 20, max = 7000)
     String description;
 
-    @Future
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
 
+    @NotNull
+    @Valid
     Location location;
 
     Boolean paid;
@@ -39,8 +42,7 @@ public class UpdateEventUserRequest {
 
     Boolean requestModeration;
 
-    EventStateAction stateAction;
-
-    @Size(min = 3, max = 120, message = "Заголовок должен содержать от 3 до 120 символов.")
+    @NotBlank
+    @Size(min = 3, max = 120)
     String title;
 }

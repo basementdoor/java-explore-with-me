@@ -1,12 +1,10 @@
-package ru.practicum;
+package ru.practicum.request.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.RequestStatus;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
 
@@ -16,9 +14,10 @@ import java.time.LocalDateTime;
 @Table(name = "requests")
 @Setter
 @Getter
+@Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Request {
+public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
