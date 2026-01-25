@@ -2,6 +2,7 @@ package ru.practicum;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +17,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class StatsClient {
 
     private final RestClient restClient;
     private final String appName;
     private final DateTimeFormatter formatter;
 
-    public StatsClient(RestClient statsRestClient,
-                       String appName,
-                       DateTimeFormatter statsDateTimeFormatter) {
-        this.restClient = statsRestClient;
-        this.appName = appName;
-        this.formatter = statsDateTimeFormatter;
-    }
-
     public ResponseEntity<HitDto> hit(HttpServletRequest request) {
         HitDto hitDto = HitDto.builder()
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .app(appName)
+                .timestamp(LocalDateTime.now())
                 .build();
 
         return restClient.post()

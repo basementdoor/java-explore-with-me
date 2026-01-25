@@ -20,12 +20,12 @@ public class HitDto {
     String app;
 
     @NotBlank
-    private String uri;
+    String uri;
 
     @NotBlank
-    private String ip;
+    String ip;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }
