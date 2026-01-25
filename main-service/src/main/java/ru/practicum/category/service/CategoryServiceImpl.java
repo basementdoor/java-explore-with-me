@@ -48,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategoryById(Long categoryId) {
         throwIfCategoryNotExist(categoryId);
         if (eventRepository.existsByCategoryId(categoryId)) {
@@ -57,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(Long categoryId, NewCategoryDto updateCategoryDto) {
         Category category = throwIfCategoryNotExist(categoryId);
         if (!category.getName().equals(updateCategoryDto.getName())) {

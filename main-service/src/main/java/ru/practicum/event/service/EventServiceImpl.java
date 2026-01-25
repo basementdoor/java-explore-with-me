@@ -238,7 +238,7 @@ public class EventServiceImpl implements EventService {
             throw new ConflictException("Событие можно отклонить, только если оно еще не опубликовано");
         }
         if (Objects.equals(updateRequest.getStateAction(), EventStateAction.PUBLISH_EVENT) &&
-                Objects.equals(event.getState(), EventState.PENDING)) {
+                !Objects.equals(event.getState(), EventState.PENDING)) {
             throw new ConflictException("Событие можно публиковать, только если оно в состоянии ожидания публикации");
         }
     }

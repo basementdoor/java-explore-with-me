@@ -3,6 +3,7 @@ package ru.practicum.event.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.event.dto.*;
+import ru.practicum.event.enums.EventState;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.Location;
 import ru.practicum.user.mapper.UserMapper;
@@ -55,6 +56,7 @@ public class EventMapper {
                 .paid(eventDto.isPaid())
                 .participantLimit(eventDto.getParticipantLimit() == null ? 0 : eventDto.getParticipantLimit())
                 .requestModeration(eventDto.isRequestModeration())
+                .state(EventState.PENDING)
                 .title(eventDto.getTitle())
                 .build();
     }
