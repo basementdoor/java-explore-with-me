@@ -18,6 +18,6 @@ public class NewCompilationDto {
     boolean pinned;
 
     @NotNull
-    @Size(min = 1, max = 50, message = "Длина заголова должна быть от 1 до 50 символов.")
+    @Size(min = 1, max = 50, message = "Длина заголовка должна быть от 1 до 50 символов.")
     String title;
 }

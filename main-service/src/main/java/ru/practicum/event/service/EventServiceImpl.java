@@ -361,6 +361,10 @@ public class EventServiceImpl implements EventService {
                 ));
     }
 
+    private Long extractEventId(String uri) {
+        return Long.parseLong(uri.split("/")[2]);
+    }
+
     private Pageable getPageable(EventSort sort, int from, int size) {
         var pageNumber = from / size;
         return switch (sort) {
@@ -368,9 +372,5 @@ public class EventServiceImpl implements EventService {
             case VIEWS -> PageRequest.of(pageNumber, size, Sort.by("views"));
             case null -> PageRequest.of(pageNumber, size, Sort.by("id"));
         };
-    }
-
-    private Long extractEventId(String uri) {
-        return Long.parseLong(uri.split("/")[2]);
     }
 }

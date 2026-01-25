@@ -31,9 +31,9 @@ public class CompilationMapper {
                 .build();
     }
 
-    public Compilation toUpdatedCompilation(Compilation compilation,
-                                            UpdateCompilationRequest compilationDto,
-                                            Set<Event> events) {
+    public Compilation updateCompilation(Compilation compilation,
+                                         UpdateCompilationRequest compilationDto,
+                                         Set<Event> events) {
         if (compilationDto.getPinned() != null) {
             compilation.setPinned(compilationDto.getPinned());
         }
