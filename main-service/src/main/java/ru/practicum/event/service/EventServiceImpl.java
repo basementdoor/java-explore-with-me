@@ -75,7 +75,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventById(Long eventId, HttpServletRequest servletRequest) {
-        Event event = throwIfEventNotExist(eventId);
+        Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
+                .orElseThrow(() -> new NotFoundException("Событие не найдено среди опубликованных"));
         statsClient.hit(servletRequest);
         long views = getEventsViews(List.of(event)).getOrDefault(eventId, 0L);
         return EventMapper.toEventFullDto(event, views);
@@ -114,7 +115,7 @@ public class EventServiceImpl implements EventService {
         EventMapper.updateToEvent(event, updateRequest);
 
         if (updateRequest.getCategory() != null) {
-            updateCategory(event, updateRequest.getCategory().getId());
+            updateCategory(event, updateRequest.getCategory());
         }
         Event savedEvent = updateAdminEventStateAction(event, updateRequest.getStateAction());
         var views = getEventsViews(List.of(savedEvent)).getOrDefault(savedEvent.getId(), 0L);
@@ -140,6 +141,10 @@ public class EventServiceImpl implements EventService {
         User user = throwIfUserNotExist(userId);
         Category category = throwIfCategoryNotExist(newEventDto.getCategory());
 
+        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new ValidationException("Дата события должна быть минимум через 2 часа.");
+        }
+
         Event newEvent = EventMapper.toEvent(newEventDto);
         newEvent.setInitiator(user);
         newEvent.setCategory(category);
@@ -162,7 +167,9 @@ public class EventServiceImpl implements EventService {
 
         validateUserEventUpdate(event, updateRequest);
         EventMapper.updateToEvent(event, updateRequest);
-        updateCategory(event, updateRequest.getCategory());
+        if (updateRequest.getCategory() != null) {
+            updateCategory(event, updateRequest.getCategory());
+        }
         updateUserEventStateAction(event, updateRequest.getStateAction());
 
         var eventViews = getEventsViews(List.of(event)).getOrDefault(eventId, 0L);

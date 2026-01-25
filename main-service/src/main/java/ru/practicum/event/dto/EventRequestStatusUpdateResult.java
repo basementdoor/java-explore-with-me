@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.request.dto.ParticipationRequestDto;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
@@ -14,6 +15,6 @@ import java.util.Collection;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateResult {
-    Collection<ParticipationRequestDto> confirmedRequests;
-    Collection<ParticipationRequestDto> rejectedRequests;
+    Collection<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
+    Collection<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 }
