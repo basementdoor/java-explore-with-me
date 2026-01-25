@@ -18,7 +18,7 @@ public class AdminCompilationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationDto createCompilation(@RequestBody NewCompilationDto newCompilation) {
+    public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilation) {
         return compilationService.createCompilation(newCompilation);
     }
 

@@ -10,6 +10,8 @@ import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
+import ru.practicum.event.repository.EventRepository;
+import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public List<CategoryDto> getCategories(int from, int size) {
@@ -39,6 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
+        checkIfCategoryNameExist(newCategoryDto.getName());
         Category newCategory = CategoryMapper.toCategory(newCategoryDto);
         return CategoryMapper.toCategoryDto(categoryRepository.save(newCategory));
     }
@@ -46,19 +50,30 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategoryById(Long categoryId) {
         throwIfCategoryNotExist(categoryId);
-        // events exist logic
+        if (eventRepository.existsByCategoryId(categoryId)) {
+            throw new ConflictException("Для категории с ID %s существуют события".formatted(categoryId));
+        }
         categoryRepository.deleteById(categoryId);
     }
 
     @Override
     public CategoryDto updateCategory(Long categoryId, NewCategoryDto updateCategoryDto) {
         Category category = throwIfCategoryNotExist(categoryId);
-        category.setName(updateCategoryDto.getName());
+        if (!category.getName().equals(updateCategoryDto.getName())) {
+            checkIfCategoryNameExist(updateCategoryDto.getName());
+            category.setName(updateCategoryDto.getName());
+        }
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
     private Category throwIfCategoryNotExist(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Категория с ID: %s не найдена".formatted(categoryId)));
+    }
+
+    private void checkIfCategoryNameExist(String name) {
+        if (categoryRepository.existsByName(name)) {
+            throw new ConflictException("Категория с именем %s уже существует".formatted(name));
+        }
     }
 }
