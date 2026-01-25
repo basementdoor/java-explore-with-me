@@ -90,7 +90,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private RequestStatus getRequestStatus(Event event) {
-        boolean needModeration = event.getRequestModeration() != null && event.getRequestModeration();
+        boolean needModeration = event.isRequestModeration();
         boolean hasLimit = event.getParticipantLimit() != null && event.getParticipantLimit() > 0;
 
         return (needModeration && hasLimit) ? RequestStatus.PENDING : RequestStatus.CONFIRMED;

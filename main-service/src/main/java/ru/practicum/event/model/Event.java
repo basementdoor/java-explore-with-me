@@ -50,7 +50,7 @@ public class Event {
 
     float lon;
 
-    Boolean paid;
+    boolean paid;
 
     @Column(name = "participant_limit")
     Integer participantLimit = 0;
@@ -60,7 +60,7 @@ public class Event {
     LocalDateTime publishedOn;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration;
+    boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
     EventState state = EventState.PENDING;
