@@ -1,6 +1,8 @@
 package ru.practicum.compilation.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,11 +32,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompilationServiceImpl implements CompilationService {
 
-    private final CompilationRepository compilationRepository;
-    private final EventRepository eventRepository;
-    private final StatsClient statsClient;
+    final CompilationRepository compilationRepository;
+    final EventRepository eventRepository;
+    final StatsClient statsClient;
 
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
