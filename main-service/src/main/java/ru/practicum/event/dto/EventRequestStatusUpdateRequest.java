@@ -14,8 +14,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateRequest {
     @NotEmpty
-    private List<Long> requestIds;
+    List<Long> requestIds;
 
     @NotNull
-    private RequestUpdateStatus status;
+    RequestUpdateStatus status;
 }
