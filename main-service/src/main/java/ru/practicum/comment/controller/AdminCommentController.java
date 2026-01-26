@@ -28,7 +28,7 @@ public class AdminCommentController {
         return commentService.getAdminComments(eventId, status, from, size);
     }
 
-    @PatchMapping("/commentId")
+    @PatchMapping("/{commentId}")
     public CommentDto updateCommentStatus(@PathVariable Long commentId,
                                           @Valid @RequestBody UpdateCommentStatusRequest updateRequest) {
         return commentService.updateCommentStatus(commentId, updateRequest);
