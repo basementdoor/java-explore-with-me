@@ -88,7 +88,7 @@ public class RequestServiceImpl implements RequestService {
             }
         }
         if (event.getState() != EventState.PUBLISHED) {
-            throw new ConflictException("нельзя добавить запрос на неопубликованное событие");
+            throw new ConflictException("Нельзя добавить запрос на неопубликованное событие");
         }
     }
 

@@ -194,7 +194,6 @@ public class EventServiceImpl implements EventService {
                                                                     EventRequestStatusUpdateRequest updateRequest) {
         throwIfUserNotExist(userId);
         Event event = throwIfEventByUserNotExist(eventId, userId);
-//        TODO: доделать после реализации request
         List<ParticipationRequest> requests = requestRepository.findByIdIn(updateRequest.getRequestIds());
         validateRequests(eventId, requests);
         return updateRequestsStatus(requests, event, updateRequest.getStatus());
