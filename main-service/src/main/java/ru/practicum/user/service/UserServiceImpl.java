@@ -1,6 +1,8 @@
 package ru.practicum.user.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
 
     @Override
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
